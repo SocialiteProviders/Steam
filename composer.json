@@ -1,0 +1,33 @@
+{
+    "name": "socialiteproviders/steam",
+    "description": "Steam OpenID Provider for Laravel Socialite",
+    "keywords": [
+        "laravel",
+        "openid",
+        "provider",
+        "socialite",
+        "steam"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Christopher Eklund",
+            "email": "eklundchristopher@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.2 || ^8.0",
+        "ext-json": "*",
+        "socialiteproviders/manager": "~4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "SocialiteProviders\\Steam\\": ""
+        }
+    },
+    "support": {
+        "issues": "https://github.com/socialiteproviders/providers/issues",
+        "source": "https://github.com/socialiteproviders/providers",
+        "docs": "https://socialiteproviders.com/steam"
+    }
+}
