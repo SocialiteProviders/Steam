@@ -145,6 +145,9 @@ class Provider extends AbstractProvider
     private function buildUrl()
     {
         $realm = $this->getConfig('realm', $this->request->server('HTTP_HOST'));
+        if ($this->validateUrl($this->redirectUrl)) {
+            throw new OpenIDValidationException('Invalid return_to host'); 
+        }
 
         $params = [
             'openid.ns'         => self::OPENID_NS,
@@ -167,6 +170,10 @@ class Provider extends AbstractProvider
     {
         if (!$this->requestIsValid()) {
             return false;
+        }
+
+        if ($this->validateUrl($this->request->get('openid_return_to'))) {
+            throw new OpenIDValidationException('Invalid return_to host'); 
         }
 
         $requestOptions = $this->getDefaultRequestOptions();
@@ -305,6 +312,18 @@ class Provider extends AbstractProvider
      */
     public static function additionalConfigKeys()
     {
-        return ['realm', 'proxy'];
+        return ['realm', 'proxy', 'allowed_hosts'];
+    }
+
+    /**
+     * Validation of the domain available for authorization
+     *
+     * @return bool
+     */
+    protected function validateUrl(string $url): bool
+    {
+        $allowedHosts = $this->getConfig('allowed_hosts', []);
+        $urlParse = parse_url($url, PHP_URL_HOST);
+        return !in_array($urlParse, $allowedHosts);
     }
 }
