@@ -35,7 +35,7 @@ class Provider extends AbstractProvider
     /**
      * @var string
      */
-    public const STEAM_INFO_URL = 'http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=%s&steamids=%s';
+    public const STEAM_INFO_URL = 'https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=%s&steamids=%s';
 
     /**
      * @var string
@@ -55,7 +55,7 @@ class Provider extends AbstractProvider
     /**
      * @var string
      */
-    public const OPENID_NS = 'http://specs.openid.net/auth/2.0';
+    public const OPENID_NS = 'https://specs.openid.net/auth/2.0';
 
     /**
      * @var string
@@ -138,12 +138,15 @@ class Provider extends AbstractProvider
     private function buildUrl()
     {
         $realm = $this->getConfig('realm', $this->request->server('HTTP_HOST'));
+        $scheme = (env('APP_ENV') === 'production' || $this->getConfig('force_ssl'))
+            ? 'https'
+            : $this->request->getScheme();
 
         $params = [
             'openid.ns'         => self::OPENID_NS,
             'openid.mode'       => 'checkid_setup',
             'openid.return_to'  => $this->redirectUrl,
-            'openid.realm'      => sprintf('%s://%s', $this->getScheme(), $realm),
+            'openid.realm'      => sprintf('%s://%s', $scheme, $realm),
             'openid.identity'   => 'http://specs.openid.net/auth/2.0/identifier_select',
             'openid.claimed_id' => 'http://specs.openid.net/auth/2.0/identifier_select',
         ];
